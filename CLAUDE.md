@@ -69,6 +69,10 @@ Units: 1 = 1 meter. The origin is at the center of the floor. The player spawns 
 - Left wall (x = -4): pseudocode panel.
 - Right wall (x = +4): exit door with an indicator lamp above it. Door opening z = -0.5..0.5, height 2.1 m, metal frame (Room/Structure/DoorFrame). Room/Interactive/Door_Exit: root on the hinge at (4.03, 0, -0.45) so it can swing later; Door_Slab (mint, 0.9 x 2.06 m, BoxCollider, closes the doorway), small window, kick plate, lever handle. Room/Interactive/Lamp_Sorted at (3.99, 2.38, 0): metal housing + Lamp_Lens (white = off; to be switched to the "done" green when sorting is finished).
 - Above the rack on the far wall: pass counter display.
+- Boards (floating, Lab_Board_Black = URP Unlit #1C2126, Lab_Mint_Glow frame, no colliders, TextMeshPro):
+  - Room/UI/Board_Algorithm (static): all bubble sort steps, at (-1.9, 1.9, 2.4), yaw -45, 1.6 x 0.72 m, Batching Static.
+  - Room/UI/Board_Guide (dynamic): at (0, 1.7, 2.45) behind the rack, 1.3 x 0.66 m, NOT static (it turns toward the headset via SortingVR.UI.FaceHeadset). Texts Guide_Title (pass), Guide_Progress (comparisons/swaps), Guide_Slots (current pair yellow, final slots green), Guide_Label (NEXT STEP / OOPS orange / DONE green), Guide_Instruction.
+- Guide logic: SortingVR.BubbleSort.BubbleSortGuide (pure C#, steps GuideStep, mistakes GuideIssue, events Changed / PassCompleted / Completed; stops after a pass with no swaps). BubbleSortGuideDriver on Rack_TestTubes feeds it rack + pan snapshots on socket select events (Tube_i starts in Slot_i). GuideBoardView on Board_Guide renders it.
 - On the sides: cabinets, shelves with flasks, a plant, decor. Simple shapes only.
 - Tabletops use Lab_TableTop (#C5D3DC light gray-blue resin, slightly glossy), not the wall material.
 - Floor: Lab_Floor uses a generated tile texture (Assets/Materials/Lab/Textures/Floor_Tile.png, 512 px, one 60 x 60 cm tile with grout on its edges and a faint speckle), tiling 13.667 x 12, offset X 0.167 so a grout line runs through the room center.
