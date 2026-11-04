@@ -26,6 +26,12 @@ namespace SortingVR.BubbleSort
         /// <summary>Raised once, when the row is sorted.</summary>
         public event Action Completed;
 
+        /// <summary>
+        /// Raised when the current pair is put back into the rack correctly:
+        /// (left slot, right slot, whether the tubes were swapped). Raised before Changed.
+        /// </summary>
+        public event Action<int, int, bool> PairPlaced;
+
         public BubbleSortGuide(int[] initialOrder, int[] valueById)
         {
             if (initialOrder == null) throw new ArgumentNullException(nameof(initialOrder));
@@ -77,6 +83,9 @@ namespace SortingVR.BubbleSort
 
         /// <summary>The id of the item that is committed to a slot by the algorithm so far.</summary>
         public int ItemInSlot(int slot) => order[slot];
+
+        /// <summary>The value of the item committed to a slot (the algorithm's a[slot]).</summary>
+        public int ValueInSlot(int slot) => valueById[order[slot]];
 
         /// <summary>
         /// Updates the guide from the current state of the world.
@@ -187,6 +196,8 @@ namespace SortingVR.BubbleSort
 
         private void CommitPair(bool swap)
         {
+            PairPlaced?.Invoke(LeftSlot, RightSlot, swap);
+
             if (swap)
             {
                 int t = order[LeftSlot];

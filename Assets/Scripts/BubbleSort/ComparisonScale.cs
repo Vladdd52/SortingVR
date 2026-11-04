@@ -29,6 +29,11 @@ namespace SortingVR.BubbleSort
         [SerializeField] private Material lampOn;
         [SerializeField] private Material lampOff;
 
+        [Tooltip("Fake glow renderers (light pool, core, haze) shown only while the left lamp is on.")]
+        [SerializeField] private Renderer[] leftGlow;
+        [Tooltip("Fake glow renderers (light pool, core, haze) shown only while the right lamp is on.")]
+        [SerializeField] private Renderer[] rightGlow;
+
         [Header("Display")]
         [SerializeField] private TMP_Text display;
 
@@ -91,6 +96,26 @@ namespace SortingVR.BubbleSort
         {
             leftLamp.sharedMaterial = leftOn ? lampOn : lampOff;
             rightLamp.sharedMaterial = rightOn ? lampOn : lampOff;
+            SetGlow(leftGlow, leftOn);
+            SetGlow(rightGlow, rightOn);
+        }
+
+        private static void SetGlow(Renderer[] glow, bool on)
+        {
+            if (glow == null)
+            {
+                return;
+            }
+
+            // Whole objects are switched, so per-frame helpers on them (the haze billboard) run only while lit.
+            for (int i = 0; i < glow.Length; i++)
+            {
+                if (glow[i] != null)
+                {
+                    glow[i].enabled = on;
+                    glow[i].gameObject.SetActive(on);
+                }
+            }
         }
 
         private void SetDisplay(string text)
